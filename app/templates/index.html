@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    {% for d in data %}
+        <a href="{{ d.url_for() }}">{{d.path}}</a>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $.fancybox.defaults.animationEffect = "false";
+        $('[data-fancybox="images"]').fancybox({
+            buttons: [
+              "slideShow",
+              "close",
+            ],
+            thumbs: {
+              autoStart: true,
+              axis: "x"
+            },
+            slideShow : {
+              autoStart : false,
+              speed     : 10000
+            },
+            // Clicked on the content
+            clickContent: function(current, event) {
+              if (current.type === "image") {
+                return 'zoom'
+              }
+              return false
+            },
+        });
+    </script>
+{% endblock %}
+
+{% block app_content %}
+    <div class="list-group">
+    {% if not data['root'] %}<a class="list-group-item list-group-item-action"
+                                href="{{ url_for('show_folder', folder_id=data['self'].parent_id) }}">...</a>{% endif %}
+    {% for d in data['directories'] %}
+        <a class="list-group-item list-group-item-action" href="{{ d.url_for() }}">{{ d.name if d.name else d.path }}</a>
+    {% endfor %}
+    {% for video in data['files']['video'] %}
+        <a class="list-group-item list-group-item-action" href="{{ video.url_for() }}">{{ video.filename }}</a>
+    {% endfor %}
+    </div>
+    <div id="VideoGalleryId">
+    {% for image in data['files']['image'] %}
+        <a data-fancybox="images" href="{{ url_for('show_preview', file_id=image.id) }}">
+            <img src="{{ url_for('show_preview', file_id=image.id) }}" alt="" />
+        </a>
+    {% endfor %}
+    </div>
+{% endblock %}
